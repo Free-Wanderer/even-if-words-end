@@ -5,513 +5,509 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Это для тебя</title>
 
-  <!-- Elegant headline + clean body -->
+  <!-- Luxury fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#070507;
-      --fg:#f2f0f6;
-      --muted:#b9b3c6;
+      --bg:#050407;
+      --fg:rgba(255,255,255,.88);
+      --muted:rgba(255,255,255,.62);
       --gold:#d6b35a;
 
-      --card: rgba(16,12,14,.42);
-      --border: rgba(255,255,255,.14);
-      --shadow: 0 30px 100px rgba(0,0,0,.65);
+      --card: rgba(9,7,9,.52);
+      --card2: rgba(18,14,16,.42);
+      --border: rgba(255,255,255,.16);
+      --shadow: 0 40px 120px rgba(0,0,0,.70);
     }
 
-    *{ box-sizing:border-box; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
 
     body{
       margin:0;
-      min-height:100svh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-
-      color:var(--fg);
-      font-family:"Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       background: var(--bg);
+      color: var(--fg);
+      font-family: "Manrope", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      display:grid;
+      place-items:center;
+      padding:18px;
       overflow-x:hidden;
       position:relative;
     }
 
-    /* ====== PINTEREST-LUXURY BACKGROUND (bokeh + warmth) ====== */
-    body::before{
-      content:"";
+    /* ===== CINEMATIC PINTEREST BACKDROP ===== */
+    .bg{
       position:fixed;
-      inset:-25%;
-      z-index:-3;
-
+      inset:-20%;
+      z-index:-5;
       background:
-        radial-gradient(520px 420px at 18% 18%, rgba(214,179,90,.28), transparent 64%),
-        radial-gradient(620px 520px at 78% 22%, rgba(255,255,255,.08), transparent 65%),
-        radial-gradient(640px 540px at 64% 82%, rgba(214,179,90,.18), transparent 66%),
-        radial-gradient(520px 480px at 10% 88%, rgba(255,255,255,.05), transparent 65%),
-        radial-gradient(900px 700px at 50% 50%, rgba(0,0,0,.55), transparent 70%);
-
-      filter: blur(18px) saturate(1.10) contrast(1.02);
-      opacity:.95;
-      animation: breathe 10.5s ease-in-out infinite;
+        radial-gradient(900px 700px at 20% 15%, rgba(214,179,90,.18), transparent 62%),
+        radial-gradient(850px 650px at 85% 20%, rgba(255,255,255,.07), transparent 62%),
+        radial-gradient(900px 700px at 55% 95%, rgba(214,179,90,.12), transparent 65%),
+        radial-gradient(1200px 900px at 50% 50%, rgba(0,0,0,.55), transparent 70%),
+        linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.78));
+      filter: blur(16px) saturate(1.08);
+      animation: bgBreathe 11s ease-in-out infinite;
       transform: translate3d(0,0,0);
+      opacity:.95;
     }
 
-    @keyframes breathe{
-      0%   { transform: translate3d(-1.5%, -1.0%,0) scale(1.02); }
-      50%  { transform: translate3d( 1.7%,  1.2%,0) scale(1.07); }
-      100% { transform: translate3d(-1.5%, -1.0%,0) scale(1.02); }
+    @keyframes bgBreathe{
+      0%{ transform: translate3d(-1.4%,-1.0%,0) scale(1.02); }
+      50%{ transform: translate3d( 1.6%, 1.1%,0) scale(1.07); }
+      100%{ transform: translate3d(-1.4%,-1.0%,0) scale(1.02); }
     }
 
-    /* Film/grain overlay */
-    body::after{
-      content:"";
+    /* floating bokeh */
+    .bokeh{
       position:fixed;
       inset:0;
-      z-index:-2;
+      z-index:-4;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .bokeh i{
+      position:absolute;
+      width:180px; height:180px;
+      border-radius:999px;
+      background: radial-gradient(circle at 40% 35%,
+        rgba(214,179,90,.22),
+        rgba(214,179,90,.08) 45%,
+        transparent 70%);
+      filter: blur(8px);
+      opacity:.55;
+      animation: float 14s linear infinite;
+    }
+    .bokeh i:nth-child(2){ width:260px;height:260px; opacity:.35; animation-duration:18s; }
+    .bokeh i:nth-child(3){ width:140px;height:140px; opacity:.40; animation-duration:16s; }
+    .bokeh i:nth-child(4){ width:220px;height:220px; opacity:.28; animation-duration:20s; }
+
+    @keyframes float{
+      from{ transform: translate3d(-10vw, 8vh,0); }
+      to{ transform: translate3d(110vw, -12vh,0); }
+    }
+
+    /* film grain */
+    .grain{
+      position:fixed;
+      inset:0;
+      z-index:-3;
       pointer-events:none;
       background:
-        radial-gradient(1200px 900px at 50% 40%, rgba(0,0,0,.40), transparent 70%),
+        radial-gradient(1200px 900px at 50% 40%, rgba(0,0,0,.45), transparent 70%),
         repeating-linear-gradient(0deg,
           rgba(255,255,255,.018) 0px,
           rgba(255,255,255,.018) 1px,
           transparent 2px,
-          transparent 5px
+          transparent 6px
         );
       mix-blend-mode: overlay;
       opacity:.16;
       animation: grainShift 7s steps(2) infinite;
     }
-
     @keyframes grainShift{
       0%{transform:translate3d(0,0,0)}
-      25%{transform:translate3d(-1%, 1%,0)}
-      50%{transform:translate3d( 1%,-1%,0)}
+      25%{transform:translate3d(-1%,1%,0)}
+      50%{transform:translate3d(1%,-1%,0)}
       75%{transform:translate3d(-1%,-1%,0)}
       100%{transform:translate3d(0,0,0)}
     }
 
-    .wrap{ width:min(760px, 100%); }
+    /* candle light (NOT candles) – just living glow */
+    .candleLight{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      pointer-events:none;
+      background:
+        radial-gradient(420px 520px at 12% 92%, rgba(214,179,90,.20), transparent 60%),
+        radial-gradient(460px 560px at 88% 92%, rgba(214,179,90,.16), transparent 62%);
+      filter: blur(10px);
+      opacity:.75;
+      animation: flickerGlow 2.6s ease-in-out infinite;
+    }
+    @keyframes flickerGlow{
+      0%,100%{ opacity:.62; transform:translate3d(0,0,0); }
+      50%{ opacity:.86; transform:translate3d(0,-0.6%,0); }
+    }
 
-    /* ====== CARD ====== */
+    /* ===== CARD LAYOUT (invitation look) ===== */
+    .wrap{
+      width:min(860px, 100%);
+      display:flex;
+      justify-content:center;
+    }
+
     .card{
-      position:relative;
+      width:min(760px, 100%);
       border-radius:28px;
-      padding:26px 22px;
-      background: linear-gradient(180deg, rgba(20,14,16,.50), rgba(12,9,10,.42));
+      padding:28px 22px 24px;
+      background: linear-gradient(180deg, var(--card), var(--card2));
       border:1px solid rgba(255,255,255,.14);
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
+      position:relative;
       overflow:hidden;
     }
 
-    /* Inner glow on edges */
+    /* inner gold edge */
     .card::before{
       content:"";
       position:absolute;
       inset:-2px;
       border-radius:30px;
       pointer-events:none;
-      background: radial-gradient(600px 420px at 50% 0%, rgba(214,179,90,.18), transparent 60%);
-      opacity:.8;
+      background: radial-gradient(800px 520px at 50% 0%, rgba(214,179,90,.16), transparent 62%);
+      opacity:.85;
     }
 
-    .top{
-      display:flex;
-      align-items:center;
-      gap:14px;
+    /* subtle vignette */
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(900px 700px at 50% 40%, transparent 55%, rgba(0,0,0,.45) 100%);
+      opacity:.65;
+    }
+
+    .content{
       position:relative;
       z-index:2;
+      text-align:center;
+      padding:6px 10px 0;
     }
 
-    .heartBadge{
-      width:46px;
-      height:46px;
-      flex:0 0 46px;
+    .icon{
+      width:46px;height:46px;
+      margin:0 auto 12px;
+      border-radius:16px;
+      border:1px solid rgba(214,179,90,.34);
+      background: rgba(214,179,90,.10);
       display:grid;
       place-items:center;
-      border-radius:16px;
-      border:1px solid rgba(214,179,90,.36);
-      background: rgba(214,179,90,.10);
       position:relative;
       overflow:hidden;
     }
-
-    .heartPulse{
+    .icon::before{
+      content:"";
       position:absolute;
       inset:-40%;
       border-radius:999px;
       border:1px solid rgba(214,179,90,.35);
-      opacity:.28;
-      animation: badgePulse 1.6s infinite;
+      opacity:.26;
+      animation: pulse 1.7s infinite;
     }
-    @keyframes badgePulse{
+    @keyframes pulse{
       0%{transform:scale(.55); opacity:0}
-      25%{opacity:.28}
+      25%{opacity:.26}
       100%{transform:scale(1.15); opacity:0}
     }
 
     h1{
       margin:0;
-      font-family:"Cormorant Garamond", ui-serif, Georgia, serif;
-      font-size:30px;
+      font-family:"Cormorant Garamond", Georgia, serif;
+      font-size:34px;
       font-weight:700;
       letter-spacing:.03em;
       line-height:1.05;
     }
+
     .sub{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:14.5px;
+      margin:10px auto 0;
+      max-width: 520px;
+      color: var(--muted);
+      font-size:15px;
       line-height:1.55;
       letter-spacing:.01em;
     }
 
-    .divider{
+    .orn{
+      margin:18px auto 16px;
+      width:86%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      color: rgba(214,179,90,.85);
+      opacity:.9;
+    }
+    .orn .line{
       height:1px;
-      background: rgba(255,255,255,.10);
-      margin:16px 0 18px;
-      position:relative;
-      z-index:2;
+      flex:1;
+      background: linear-gradient(90deg, transparent, rgba(214,179,90,.55), transparent);
+    }
+    .orn .dot{
+      width:4px;height:4px;border-radius:999px;
+      background: rgba(214,179,90,.85);
+      box-shadow: 0 0 20px rgba(214,179,90,.25);
     }
 
-    .text{
-      position:relative;
-      z-index:2;
-      font-size:16px;
+    .block{
+      max-width: 560px;
+      margin: 0 auto;
+      font-size:18px;
       line-height:1.95;
       letter-spacing:.01em;
     }
-    .text p{ margin:0 0 14px; }
 
-    .mono{
-      margin: 14px 0 14px;
-      padding: 12px 12px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.34);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size:14px;
-      color:#f3f3f7;
-    }
+    .block .muted{ color: var(--muted); }
 
-    ul{margin:10px 0 14px; padding:0; list-style:none;}
-    li{margin:10px 0; display:flex; gap:10px; align-items:flex-start;}
-    .dash{color:rgba(214,179,90,.95); font-weight:800; transform:translateY(1px);}
-
-    .foot{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.75;
-    }
-
-    .videoTitle{
-      display:inline-block;
-      padding:9px 12px;
-      border-radius:14px;
-      border:1px solid rgba(214,179,90,.38);
-      background: rgba(214,179,90,.12);
-      font-weight:700;
-      letter-spacing:.01em;
-    }
-
-    .hook{
-      margin-top:18px;
-      padding:14px 14px;
+    .rules{
+      margin:18px auto 0;
+      padding:16px 16px;
       border-radius:18px;
-      border:1px solid rgba(214,179,90,.24);
-      background: rgba(214,179,90,.065);
-      font-weight:650;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      text-align:left;
+      max-width: 560px;
     }
-
-    /* ====== CANDLES (pure CSS, flicker animation) ====== */
-    .candles{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      z-index:1;
-      opacity:.92;
+    .rules b{
+      display:block;
+      text-align:center;
+      font-weight:600;
+      color: rgba(255,255,255,.82);
+      letter-spacing:.01em;
+      margin-bottom:10px;
     }
-
-    .candle{
-      position:absolute;
-      bottom:-20px;
-      width:52px;
-      height:220px;
-      filter: blur(.1px);
-      opacity:.85;
+    .rules ul{
+      margin:0;
+      padding:0;
+      list-style:none;
     }
-
-    .candle .body{
-      position:absolute;
-      bottom:0;
-      left:50%;
-      transform:translateX(-50%);
-      width:26px;
-      height:160px;
-      border-radius:16px;
-      background: linear-gradient(180deg,
-        rgba(255,255,255,.30),
-        rgba(214,179,90,.10) 40%,
-        rgba(0,0,0,.25)
-      );
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: 0 16px 40px rgba(0,0,0,.45);
-    }
-
-    .candle .flame{
-      position:absolute;
-      bottom:150px;
-      left:50%;
-      transform:translateX(-50%);
-      width:18px;
-      height:28px;
-      border-radius: 50% 50% 50% 50%;
-      background: radial-gradient(circle at 45% 35%,
-        rgba(255,255,255,.85),
-        rgba(214,179,90,.85) 35%,
-        rgba(214,179,90,.0) 70%
-      );
-      filter: blur(.2px);
-      animation: flicker 1.6s infinite;
-      transform-origin: 50% 80%;
-    }
-
-    .candle .glow{
-      position:absolute;
-      bottom:130px;
-      left:50%;
-      transform:translateX(-50%);
-      width:180px;
-      height:180px;
-      border-radius:999px;
-      background: radial-gradient(circle,
-        rgba(214,179,90,.18),
-        rgba(214,179,90,.05) 45%,
-        transparent 70%
-      );
-      animation: glowBreathe 2.4s ease-in-out infinite;
-      filter: blur(1px);
-      opacity:.85;
-    }
-
-    @keyframes flicker{
-      0%{ transform:translateX(-50%) scale(1.00) rotate(-2deg); opacity:.90; }
-      20%{ transform:translateX(-50%) scale(1.03) rotate(2deg); opacity:.95; }
-      45%{ transform:translateX(-50%) scale(.98) rotate(-1deg); opacity:.88; }
-      70%{ transform:translateX(-50%) scale(1.05) rotate(3deg); opacity:.98; }
-      100%{ transform:translateX(-50%) scale(1.00) rotate(-2deg); opacity:.90; }
-    }
-
-    @keyframes glowBreathe{
-      0%,100%{ transform:translateX(-50%) scale(1.00); opacity:.70; }
-      50%{ transform:translateX(-50%) scale(1.08); opacity:.92; }
-    }
-
-    /* Place candles similar to mock */
-    .c1{ left:-8px;  bottom:-28px; transform:scale(1.05); }
-    .c2{ right:-10px; bottom:-34px; transform:scale(1.15); }
-    .c3{ right:28px; bottom:-26px; transform:scale(.92); opacity:.75; }
-
-    /* ====== SOUND BUTTON ====== */
-    .sound{
-      position:fixed;
-      right:14px;
-      bottom:14px;
-      z-index:10;
+    .rules li{
       display:flex;
       gap:10px;
-      align-items:center;
+      padding:8px 0;
+      align-items:flex-start;
+      color: rgba(255,255,255,.82);
+      font-size:16px;
+      line-height:1.7;
     }
-    .btn{
-      appearance:none;
-      border:1px solid rgba(214,179,90,.32);
-      background: rgba(214,179,90,.12);
-      color:var(--fg);
-      padding:10px 12px;
-      border-radius:16px;
-      font-weight:650;
-      cursor:pointer;
-      box-shadow: 0 14px 40px rgba(0,0,0,.45);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: transform .12s ease, background .12s ease;
-      display:inline-flex;
+    .rules .dash{
+      color: rgba(214,179,90,.95);
+      font-weight:800;
+      transform: translateY(1px);
+    }
+
+    .note{
+      margin:14px auto 0;
+      color: var(--muted);
+      font-size:14.5px;
+      line-height:1.65;
+      max-width: 560px;
+    }
+
+    .titleBox{
+      margin:14px auto 0;
+      display:inline-block;
+      padding:12px 16px;
+      border-radius:20px;
+      border:1px solid rgba(214,179,90,.38);
+      background: rgba(214,179,90,.11);
+      font-family:"Cormorant Garamond", Georgia, serif;
+      font-size:22px;
+      letter-spacing:.02em;
+      color: rgba(255,255,255,.90);
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+    }
+
+    .finalHook{
+      margin:18px auto 0;
+      padding:16px 16px;
+      border-radius:20px;
+      border:1px solid rgba(214,179,90,.24);
+      background: rgba(214,179,90,.06);
+      max-width: 560px;
+      font-size:16.5px;
+      line-height:1.8;
+      letter-spacing:.01em;
+      color: rgba(255,255,255,.88);
+    }
+
+    /* Sound toggle — elegant, not “button” */
+    .soundToggle{
+      position:absolute;
+      top:14px;
+      right:14px;
+      z-index:3;
+      display:flex;
       align-items:center;
       gap:10px;
-      font-size:14px;
-    }
-    .btn:hover{ transform: translateY(-1px); background: rgba(214,179,90,.16); }
-    .btn:active{ transform: translateY(0px); }
-
-    .pill{
-      color:rgba(255,255,255,.75);
-      font-size:12.5px;
-      padding:8px 10px;
+      padding:10px 12px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.25);
-      display:none;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      cursor:pointer;
+      user-select:none;
+    }
+    .soundToggle span{
+      font-size:13px;
+      color: rgba(255,255,255,.72);
+      letter-spacing:.01em;
+      display:none; /* on mobile hide */
+    }
+    .soundToggle .lamp{
+      width:10px;height:10px;border-radius:999px;
+      background: rgba(255,255,255,.25);
+      box-shadow: 0 0 0 rgba(214,179,90,.0);
+      transition:.18s;
+    }
+    .soundToggle.on .lamp{
+      background: rgba(214,179,90,.95);
+      box-shadow: 0 0 18px rgba(214,179,90,.35);
     }
 
-    /* Mobile */
+    /* mobile */
     @media (max-width:520px){
       body{ padding:14px; }
-      h1{ font-size:24px; }
-      .text{ font-size:15.5px; line-height:2.0; }
-      .card{ padding:22px 18px; border-radius:24px; }
-      .candle{ opacity:.75; }
-      .pill{ display:none; }
+      h1{ font-size:28px; }
+      .block{ font-size:16.5px; }
+      .rules li{ font-size:15.5px; }
+      .titleBox{ font-size:20px; }
+      .soundToggle span{ display:none; }
+    }
+
+    @media (min-width:760px){
+      .soundToggle span{ display:inline; }
     }
   </style>
 </head>
 
 <body>
+  <!-- Background layers -->
+  <div class="bg" aria-hidden="true"></div>
+  <div class="bokeh" aria-hidden="true">
+    <i style="top:12%; left:-12%;"></i>
+    <i style="top:38%; left:-18%;"></i>
+    <i style="top:62%; left:-10%;"></i>
+    <i style="top:78%; left:-22%;"></i>
+  </div>
+  <div class="candleLight" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
   <main class="wrap">
     <section class="card" role="article" aria-label="Инструкция">
 
-      <!-- Candle layer -->
-      <div class="candles" aria-hidden="true">
-        <div class="candle c1">
-          <div class="glow"></div>
-          <div class="flame"></div>
-          <div class="body"></div>
-        </div>
-        <div class="candle c2">
-          <div class="glow"></div>
-          <div class="flame"></div>
-          <div class="body"></div>
-        </div>
-        <div class="candle c3">
-          <div class="glow"></div>
-          <div class="flame"></div>
-          <div class="body"></div>
-        </div>
+      <!-- Sound toggle -->
+      <div class="soundToggle" id="toggle" title="Включить атмосферу">
+        <div class="lamp"></div>
+        <span>атмосфера</span>
       </div>
 
-      <div class="top">
-        <div class="heartBadge" aria-hidden="true">
-          <div class="heartPulse"></div>
+      <div class="content">
+        <div class="icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path d="M12 21s-7-4.35-9.5-8.6C.3 8.8 2.2 5.8 5.4 5.1c1.9-.4 3.6.4 4.6 1.7 1-1.3 2.7-2.1 4.6-1.7 3.2.7 5.1 3.7 2.9 7.3C19 16.65 12 21 12 21z"
                   stroke="rgba(214,179,90,.95)" stroke-width="1.6" />
           </svg>
         </div>
-        <div>
-          <h1>Это для тебя. И только для тебя.</h1>
-          <div class="sub">Если ты это читаешь — значит всё идёт по плану</div>
+
+        <h1>Это для тебя.<br/>И только для тебя.</h1>
+        <div class="sub">Если ты это читаешь — значит всё идёт по плану</div>
+
+        <div class="orn" aria-hidden="true">
+          <div class="line"></div><div class="dot"></div><div class="line"></div>
         </div>
-      </div>
 
-      <div class="divider"></div>
+        <div class="block">
+          <div>Не отвечай никому</div>
+          <div>Не спрашивай, кто отправил цветы</div>
+          <div>Не пытайся угадать</div>
+          <br/>
+          <div class="muted">Сейчас это не важно</div>
+          <div>Важно только то, что будет дальше</div>
+        </div>
 
-      <div class="text">
-        <p>
-          Не отвечай никому<br/>
-          Не спрашивай, кто отправил цветы<br/>
-          Не пытайся угадать
-        </p>
+        <div class="orn" aria-hidden="true" style="margin-top:16px;">
+          <div class="line"></div><div class="dot"></div><div class="line"></div>
+        </div>
 
-        <p>Сейчас это не важно</p>
-        <p>Важно только то, что будет дальше</p>
+        <div class="rules">
+          <b>Прежде чем продолжить</b>
+          <ul>
+            <li><span class="dash">—</span><span>Убедись, что ты одна</span></li>
+            <li><span class="dash">—</span><span>В комнате тихо</span></li>
+            <li><span class="dash">—</span><span>Никто не увидит экран</span></li>
+            <li><span class="dash">—</span><span>Ты готова уделить этому несколько минут</span></li>
+          </ul>
+        </div>
 
-        <div class="mono">Прежде чем продолжить:</div>
-
-        <ul>
-          <li><span class="dash">—</span><span>Убедись, что ты одна</span></li>
-          <li><span class="dash">—</span><span>В комнате тихо</span></li>
-          <li><span class="dash">—</span><span>Никто не увидит экран</span></li>
-          <li><span class="dash">—</span><span>Ты готова уделить этому несколько минут</span></li>
-        </ul>
-
-        <p class="foot">
+        <div class="note">
           Если хотя бы один пункт не выполнен — закрой страницу<br/>
           Она подождёт
-        </p>
+        </div>
 
-        <div class="divider"></div>
+        <div class="orn" aria-hidden="true" style="margin-top:18px;">
+          <div class="line"></div><div class="dot"></div><div class="line"></div>
+        </div>
 
-        <p>Когда будешь готова:</p>
+        <div class="block">
+          <div>Когда будешь готова</div>
+          <br/>
+          <div>Включи телевизор</div>
+          <div>Открой приложение VK</div>
+          <br/>
+          <div class="muted">В поиске введи название</div>
+          <div class="titleBox">Даже если закончатся слова</div>
+          <br/>
+          <div>Найди видео</div>
+          <div>Не открывай сразу</div>
+          <br/>
+          <div class="muted">Вернись сюда</div>
+          <br/>
+          <div>Когда будешь стоять перед экраном</div>
+          <div class="muted">и будешь готова</div>
+          <br/>
+          <div>просто запусти видео</div>
+        </div>
 
-        <p>
-          Включи телевизор<br/>
-          Открой приложение VK
-        </p>
-
-        <p>В поиске введи название:</p>
-        <p><span class="videoTitle">Даже если закончатся слова</span></p>
-
-        <p>
-          Найди видео<br/>
-          Не открывай сразу
-        </p>
-
-        <p>Вернись сюда</p>
-
-        <p>
-          Когда будешь стоять перед экраном<br/>
-          и будешь готова
-        </p>
-
-        <p>просто запусти видео</p>
-
-        <div class="hook">
+        <div class="finalHook">
           Ты уже сделала первый шаг<br/>
           Остался ещё один
         </div>
       </div>
+
+      <!-- Audio: put ambience.mp3 next to index.html -->
+      <audio id="amb" preload="auto" loop>
+        <source src="ambience.mp3" type="audio/mpeg">
+      </audio>
+
     </section>
   </main>
 
-  <!-- Ambient audio (put ambience.mp3 next to index.html) -->
-  <audio id="amb" preload="auto" loop>
-    <source src="ambience.mp3" type="audio/mpeg">
-  </audio>
-
-  <div class="sound">
-    <span class="pill" id="hint">звук выключен</span>
-    <button class="btn" id="toggle">
-      Включить атмосферу
-    </button>
-  </div>
-
   <script>
-    const audio = document.getElementById("amb");
-    const btn = document.getElementById("toggle");
-    const hint = document.getElementById("hint");
+    const audio = document.getElementById('amb');
+    const toggle = document.getElementById('toggle');
 
-    // Comfortable default volume (you can change)
-    audio.volume = 0.28;
+    audio.volume = 0.22; // мягко
 
     let on = false;
 
-    async function toggle(){
+    toggle.addEventListener('click', async () => {
       try{
         if(!on){
-          await audio.play(); // requires user gesture — button click is ok
+          await audio.play(); // потребует тап — это и есть тап
           on = true;
-          btn.textContent = "Выключить атмосферу";
-          hint.style.display = "none";
+          toggle.classList.add('on');
+          toggle.title = "Выключить атмосферу";
         }else{
           audio.pause();
           on = false;
-          btn.textContent = "Включить атмосферу";
+          toggle.classList.remove('on');
+          toggle.title = "Включить атмосферу";
         }
       }catch(e){
-        // If blocked, show hint
-        hint.style.display = "inline-flex";
-        hint.textContent = "нажми ещё раз";
+        // если Safari капризничает — повторный тап обычно решает
       }
-    }
-
-    btn.addEventListener("click", toggle);
+    });
   </script>
-</body>
-</html>
-
 </body>
 </html>
