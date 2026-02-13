@@ -2,76 +2,86 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Это для тебя</title>
 
-  <!-- Fonts close to the reference vibe -->
+  <!-- Fullscreen / PWA-ready meta (will be fullscreen when added to Home Screen) -->
+  <meta name="theme-color" content="#050407">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Fonts close to the reference -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
 
   <style>
     :root{
+      --bg:#050407;
       --cream: rgba(244, 232, 205, 0.92);
-      --cream2: rgba(244, 232, 205, 0.68);
+      --cream2: rgba(244, 232, 205, 0.70);
       --goldline: rgba(222, 188, 120, 0.55);
       --shadow: rgba(0,0,0,0.55);
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
+
     body{
       margin:0;
-      background:#0b0708;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      padding:10px;
+      background:var(--bg);
+      display:grid;
+      place-items:center;
+      padding: env(safe-area-inset-top) 10px env(safe-area-inset-bottom);
       overflow:hidden;
       font-family:"Cormorant Garamond", serif;
     }
 
-    /* Stage wrapper */
+    /* Portrait stage: like your reference image */
     .stage{
       position:relative;
-      width:min(720px, 100%);
-      aspect-ratio: 3 / 4;           /* portrait-ish, like the reference */
+      width:min(760px, 100%);
+      height:min(100svh, 1100px);
+      aspect-ratio: 3 / 4;
       border-radius: 18px;
       overflow:hidden;
       box-shadow: 0 30px 120px rgba(0,0,0,.7);
       background:#120b0c;
     }
 
-    /* Background image (exact reference) */
+    /* Exact background image — put it next to index.html as invite.png OR change path below */
     .bg{
       position:absolute;
       inset:0;
-      background-image: url("assets/invite.png");
+      background-image: url("invite.png");
       background-size: cover;
       background-position: center;
-      transform: scale(1.02); /* tiny overscan to avoid edges */
-      filter: contrast(1.02) saturate(1.02);
+      transform: scale(1.01);
+      filter: contrast(1.02) saturate(1.03);
+      z-index:1;
     }
 
-    /* Soft vignette to keep text readable */
+    /* subtle vignette for readability */
     .vignette{
       position:absolute;
       inset:0;
       background:
-        radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.60) 100%);
+        radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.33) 60%, rgba(0,0,0,0.62) 100%);
       pointer-events:none;
+      z-index:2;
     }
 
-    /* Top frame line (subtle) */
+    /* thin frame line */
     .frame{
       position:absolute;
       inset:6%;
       border-radius: 18px;
       border: 1px solid rgba(235, 214, 168, 0.24);
       pointer-events:none;
+      z-index:3;
     }
 
-    /* Content overlay (text aligned like the reference) */
+    /* Content overlay (centered like the reference) */
     .content{
       position:absolute;
       inset:6%;
@@ -82,12 +92,13 @@
       padding: 22px 18px;
       color: var(--cream);
       text-shadow: 0 2px 18px var(--shadow);
+      z-index:4;
     }
 
     .tinyHeart{
       font-size: 22px;
       line-height: 1;
-      opacity: .78;
+      opacity: .82;
       margin-top: 2px;
       margin-bottom: 10px;
     }
@@ -96,7 +107,7 @@
       margin: 6px 0 10px;
       font-weight: 500;
       letter-spacing: .02em;
-      font-size: clamp(26px, 3.6vw, 42px);
+      font-size: clamp(26px, 3.6vw, 44px);
       line-height: 1.12;
     }
 
@@ -109,11 +120,11 @@
     }
 
     .orn{
-      width: 72%;
+      width: 74%;
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--goldline), transparent);
       margin: 14px 0 8px;
-      opacity: .9;
+      opacity: .95;
       position:relative;
     }
     .orn::after{
@@ -125,7 +136,7 @@
       height:6px;
       transform: translateX(-50%) rotate(45deg);
       background: rgba(222,188,120,0.55);
-      opacity: .75;
+      opacity: .80;
     }
 
     .block{
@@ -145,28 +156,28 @@
       line-height: 1.55;
     }
 
-    /* Big title button-like box */
+    /* Big title box */
     .titleWrap{
       margin-top: 22px;
-      width: min(540px, 92%);
+      width: min(560px, 94%);
       border-radius: 26px;
       border: 1px solid rgba(235, 214, 168, 0.34);
       padding: 18px 16px 14px;
-      background: rgba(25, 16, 17, 0.22);
-      backdrop-filter: blur(3px);
-      -webkit-backdrop-filter: blur(3px);
+      background: rgba(25, 16, 17, 0.18);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
       box-shadow: 0 20px 80px rgba(0,0,0,.25);
     }
     .script{
       font-family: "Great Vibes", cursive;
-      font-size: clamp(28px, 4.0vw, 50px);
+      font-size: clamp(28px, 4.0vw, 52px);
       line-height: 1.0;
       color: rgba(244,232,205,0.92);
       margin-bottom: 6px;
       text-shadow: 0 2px 20px rgba(0,0,0,.35);
     }
     .titleMain{
-      font-size: clamp(20px, 3.0vw, 36px);
+      font-size: clamp(20px, 3.0vw, 38px);
       letter-spacing: .02em;
       line-height: 1.1;
       color: rgba(244,232,205,0.90);
@@ -177,7 +188,7 @@
     .underTitle{
       margin-top: 12px;
       font-size: clamp(13px, 2.0vw, 17px);
-      color: rgba(244,232,205,0.72);
+      color: rgba(244,232,205,0.74);
       letter-spacing: .02em;
     }
 
@@ -185,44 +196,40 @@
       margin-top: 6px;
       font-size: clamp(16px, 2.4vw, 22px);
       letter-spacing: .03em;
-      color: rgba(244,232,205,0.85);
+      color: rgba(244,232,205,0.86);
     }
 
     .final{
       margin-top: auto;
-      padding-top: 16px;
+      padding-top: 18px;
       font-size: clamp(16px, 2.4vw, 22px);
-      color: rgba(244,232,205,0.80);
+      color: rgba(244,232,205,0.82);
       line-height: 1.65;
     }
     .final .soft{
       font-family: "Great Vibes", cursive;
-      font-size: clamp(26px, 3.6vw, 44px);
-      color: rgba(244,232,205,0.86);
+      font-size: clamp(26px, 3.6vw, 46px);
+      color: rgba(244,232,205,0.88);
       display:block;
       margin-bottom: 2px;
       letter-spacing: .01em;
     }
 
-    /* Particles canvas overlay */
+    /* Particles canvas overlay — brighter, varied, noticeable */
     canvas#dust{
       position:absolute;
       inset:0;
-      z-index:5;
+      z-index:6;
       pointer-events:none;
       mix-blend-mode: screen;
-      opacity: .40;
+      opacity: .75;
+      filter: saturate(1.18) contrast(1.06);
     }
 
-    /* keep overlay above background */
-    .content, .frame, .vignette{ z-index:3; }
-    .bg{ z-index:1; }
-    .vignette{ z-index:2; }
-
-    /* mobile fine-tune */
+    /* mobile tune */
     @media (max-width:420px){
       .content{ padding: 18px 14px; }
-      .orn{ width: 84%; }
+      .orn{ width: 86%; }
       .titleWrap{ width: 96%; }
     }
   </style>
@@ -284,13 +291,13 @@
   </div>
 
   <script>
-    // Subtle floating dust particles (depth)
+    // Brighter, varied, noticeable dust + bokeh particles
     const canvas = document.getElementById('dust');
     const ctx = canvas.getContext('2d', { alpha: true });
 
     let w, h, dpr;
     const particles = [];
-    const COUNT = 120; // can reduce if you want less
+    const COUNT = 240;
 
     function resize(){
       dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
@@ -303,57 +310,97 @@
 
     function rand(min,max){ return Math.random()*(max-min)+min; }
 
-    function seed(){
-      particles.length = 0;
-      for(let i=0;i<COUNT;i++){
-        particles.push({
-          x: rand(0,w),
-          y: rand(0,h),
-          r: rand(0.6, 2.4),
-          a: rand(0.05, 0.22),
-          vx: rand(-0.08, 0.18),
-          vy: rand(-0.10, 0.10),
-          tw: rand(0.002, 0.010), // twinkle speed
-          ph: rand(0, Math.PI*2)  // phase
-        });
+    function spawn(){
+      const kind = Math.random();
+
+      let size, alpha, vx, vy, blur, warm, tw;
+
+      if(kind < 0.60){
+        // tiny dust
+        size = rand(0.6, 1.8);
+        alpha = rand(0.10, 0.26);
+        vx = rand(-0.07, 0.18);
+        vy = rand(-0.06, 0.06);
+        blur = rand(8, 14);
+        warm = rand(0.90, 1.10);
+        tw = rand(0.010, 0.030);
+      }else if(kind < 0.90){
+        // medium sparks
+        size = rand(1.6, 3.8);
+        alpha = rand(0.18, 0.42);
+        vx = rand(-0.05, 0.14);
+        vy = rand(-0.05, 0.05);
+        blur = rand(16, 26);
+        warm = rand(1.00, 1.18);
+        tw = rand(0.006, 0.015);
+      }else{
+        // big bokeh
+        size = rand(3.8, 9.5);
+        alpha = rand(0.12, 0.28);
+        vx = rand(-0.03, 0.07);
+        vy = rand(-0.03, 0.03);
+        blur = rand(30, 52);
+        warm = rand(1.05, 1.28);
+        tw = rand(0.003, 0.008);
       }
+
+      return {
+        x: rand(-60, w + 60),
+        y: rand(-40, h + 40),
+        s: size,
+        a: alpha,
+        vx, vy,
+        blur,
+        warm,
+        tw,
+        ph: rand(0, Math.PI*2)
+      };
     }
 
-    function draw(t){
+    function seed(){
+      particles.length = 0;
+      for(let i=0;i<COUNT;i++) particles.push(spawn());
+    }
+
+    function draw(tms){
+      const t = tms * 0.001;
       ctx.clearRect(0,0,w,h);
 
-      // slight warm tint
       for(const p of particles){
         p.x += p.vx;
         p.y += p.vy;
 
-        // wrap
-        if(p.x < -20) p.x = w + 20;
-        if(p.x > w + 20) p.x = -20;
-        if(p.y < -20) p.y = h + 20;
-        if(p.y > h + 20) p.y = -20;
+        if(p.x < -80) p.x = w + 80;
+        if(p.x > w + 80) p.x = -80;
+        if(p.y < -80) p.y = h + 80;
+        if(p.y > h + 80) p.y = -80;
 
-        // twinkle
-        const tw = 0.5 + 0.5*Math.sin(p.ph + t*p.tw);
-        const alpha = p.a * (0.65 + 0.55*tw);
+        const tw = 0.55 + 0.45*Math.sin(p.ph + t * (1 + p.tw*80));
+        const alpha = p.a * (0.70 + 0.65*tw);
 
-        // soft glow dot
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*6);
-        grad.addColorStop(0, `rgba(230,200,140,${alpha})`);
-        grad.addColorStop(1, `rgba(230,200,140,0)`);
+        const r = Math.floor(232 * p.warm);
+        const g = Math.floor(200 * (0.94 + (p.warm-1)*0.6));
+        const b = Math.floor(140 * (0.90 + (p.warm-1)*0.4));
+
+        const rad = p.s * p.blur;
+
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rad);
+        grad.addColorStop(0, `rgba(${r},${g},${b},${alpha})`);
+        grad.addColorStop(0.25, `rgba(${r},${g},${b},${alpha*0.45})`);
+        grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
 
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r*6, 0, Math.PI*2);
+        ctx.arc(p.x, p.y, rad, 0, Math.PI*2);
         ctx.fill();
       }
 
-      requestAnimationFrame((nt)=>draw(nt));
+      requestAnimationFrame(draw);
     }
 
     window.addEventListener('resize', ()=>{ resize(); seed(); });
     resize(); seed();
-    requestAnimationFrame((t)=>draw(t));
+    requestAnimationFrame(draw);
   </script>
 </body>
 </html>
