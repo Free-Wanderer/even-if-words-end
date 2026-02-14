@@ -20,7 +20,7 @@
       --cream2: rgba(244, 232, 205, 0.70);
       --goldline: rgba(222, 188, 120, 0.55);
       --shadow: rgba(0,0,0,0.55);
-      --panel: rgba(25, 16, 17, 0.10);
+      --panel: rgba(25, 16, 17, 0.12);
       --panelBorder: rgba(235, 214, 168, 0.34);
     }
 
@@ -33,8 +33,10 @@
       display:grid;
       place-items:center;
       padding: env(safe-area-inset-top) 10px env(safe-area-inset-bottom);
-      overflow:hidden;
+      /* ✅ IMPORTANT: allow page scroll if needed */
+      overflow:auto;
       font-family:"Cormorant Garamond", serif;
+      -webkit-overflow-scrolling: touch;
     }
 
     .stage{
@@ -48,7 +50,7 @@
       background:#120b0c;
     }
 
-    /* Background: prefer root invite.png. If you want the folder one, change to assets/invite.png */
+    /* Background */
     .bgImg{
       position:absolute;
       inset:0;
@@ -78,21 +80,32 @@
       border-radius: 18px;
       border: 1px solid rgba(235, 214, 168, 0.24);
       pointer-events:none;
-      z-index:3;
+      z-index:4;
     }
 
-    .content{
+    canvas#dust{
+      position:absolute;
+      inset:0;
+      z-index:3;
+      pointer-events:none;
+      mix-blend-mode: normal;
+      opacity: 1;
+    }
+
+    /* ✅ Scrollable content area */
+    .scroll{
       position:absolute;
       inset:6%;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
+      z-index:5;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
       padding: 22px 18px;
       color: var(--cream);
       text-shadow: 0 2px 18px var(--shadow);
-      z-index:4;
+      text-align:center;
+      scrollbar-width: none;
     }
+    .scroll::-webkit-scrollbar{ display:none; }
 
     .tinyHeart{
       font-size: 22px;
@@ -122,7 +135,7 @@
       width: 74%;
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--goldline), transparent);
-      margin: 14px 0 10px;
+      margin: 14px auto 10px;
       opacity: .95;
       position:relative;
     }
@@ -144,12 +157,13 @@
       letter-spacing: .01em;
       color: rgba(244,232,205,0.90);
       max-width: 620px;
+      margin: 0 auto;
     }
     .block .dim{ color: rgba(244,232,205,0.72); }
 
     .rules{
-      margin-top: 14px;
-      width: min(620px, 96%);
+      margin: 14px auto 0;
+      width: min(620px, 98%);
       border-radius: 20px;
       border: 1px solid rgba(235, 214, 168, 0.22);
       background: rgba(0,0,0,0.18);
@@ -163,11 +177,7 @@
       margin-bottom: 10px;
       letter-spacing: .01em;
     }
-    .rules ul{
-      margin:0;
-      padding:0;
-      list-style:none;
-    }
+    .rules ul{ margin:0; padding:0; list-style:none; }
     .rules li{
       display:flex;
       gap:10px;
@@ -184,25 +194,25 @@
     }
 
     .warn{
-      margin-top: 12px;
+      margin: 12px auto 0;
       font-size: clamp(13px, 2.0vw, 17px);
       color: rgba(244,232,205,0.72);
       line-height: 1.55;
+      max-width: 620px;
     }
 
     .steps{
-      margin-top: 16px;
+      margin: 16px auto 0;
       font-size: clamp(15px, 2.2vw, 20px);
       line-height: 1.78;
       color: rgba(244,232,205,0.90);
+      max-width: 620px;
     }
-    .steps .label{
-      color: rgba(244,232,205,0.78);
-    }
+    .steps .label{ color: rgba(244,232,205,0.78); }
 
     .titleWrap{
-      margin-top: 14px;
-      width: min(560px, 94%);
+      margin: 14px auto 0;
+      width: min(560px, 96%);
       border-radius: 26px;
       border: 1px solid var(--panelBorder);
       padding: 18px 16px 14px;
@@ -229,56 +239,43 @@
     }
 
     .final{
-      margin-top: auto;
-      padding-top: 14px;
+      margin: 14px auto 26px;
       font-size: clamp(14px, 2.1vw, 18px);
       color: rgba(244,232,205,0.86);
       line-height: 1.65;
+      max-width: 620px;
     }
 
-    canvas#dust{
-      position:absolute;
-      inset:0;
-      z-index:6;
-      pointer-events:none;
-      mix-blend-mode: normal;
-      opacity: 1;
-    }
-
-    .dbg{
-      position:absolute;
-      left:10px;
-      bottom:10px;
-      z-index:10;
-      font: 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: rgba(255,255,255,.75);
-      background: rgba(0,0,0,.35);
-      border:1px solid rgba(255,255,255,.12);
-      padding:8px 10px;
-      border-radius:12px;
-      display:none;
+    /* Small hint that you can scroll */
+    .scrollHint{
+      position: sticky;
+      bottom: 0;
+      margin-top: 18px;
+      padding: 10px 0 2px;
+      background: linear-gradient(to top, rgba(0,0,0,0.35), rgba(0,0,0,0));
+      color: rgba(244,232,205,0.70);
+      font-size: 13px;
+      letter-spacing: .02em;
     }
 
     @media (max-width:420px){
-      .content{ padding: 18px 14px; }
+      .scroll{ padding: 18px 14px; }
       .orn{ width: 86%; }
-      .titleWrap{ width: 96%; }
-      .rules{ width: 98%; }
+      .titleWrap{ width: 98%; }
+      .rules{ width: 100%; }
     }
   </style>
 </head>
 
 <body>
   <div class="stage">
-    <!-- Uses root invite.png (next to index.html). If you want the folder one instead: src="assets/invite.png" -->
     <img class="bgImg" id="bgImg" src="invite.png" alt="" />
-
+    <canvas id="dust"></canvas>
     <div class="vignette"></div>
     <div class="frame"></div>
 
-    <canvas id="dust"></canvas>
-
-    <div class="content">
+    <!-- ✅ scrollable content -->
+    <div class="scroll" id="scroll">
       <div class="tinyHeart">♡</div>
 
       <h1>Это для тебя.<br>И только для тебя.</h1>
@@ -328,27 +325,33 @@
         Не запускай сразу, сядь удобно<br>
         Приятного просмотра
       </div>
-    </div>
 
-    <div class="dbg" id="dbg">Фон не найден. Проверь invite.png (в корне) или поменяй на assets/invite.png</div>
+      <!-- hint -->
+      <div class="scrollHint">Листай вниз ↓</div>
+
+      <!-- ✅ сюда добавляй любое продолжение (если нужно) -->
+      <!--
+      <div class="orn" style="margin-top:16px;"></div>
+      <div class="final">
+        ...тут продолжение текста / следующая страница / кнопка...
+      </div>
+      -->
+    </div>
   </div>
 
   <script>
-    // Cache-bust background to avoid iOS caching issues
+    // Cache-bust background (iOS caching)
     (function(){
       const img = document.getElementById('bgImg');
-      const base = img.getAttribute('src');
-      img.src = base + '?v=' + Date.now();
-      img.onerror = () => (document.getElementById('dbg').style.display = 'inline-block');
+      img.src = "invite.png?v=" + Date.now();
     })();
 
-    // Visible spark-dust (no haze)
+    // Particles
     const canvas = document.getElementById('dust');
     const ctx = canvas.getContext('2d', { alpha: true });
 
     let w, h, dpr;
     const sparks = [];
-
     const COUNT = 190;
     const SPEED = 2.6;
     const rand = (a,b)=>Math.random()*(b-a)+a;
