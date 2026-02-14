@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Это для тебя</title>
 
-  <!-- Fullscreen when added to Home Screen (iOS) -->
   <meta name="theme-color" content="#050407">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- Fonts close to the reference -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -37,7 +35,6 @@
       font-family:"Cormorant Garamond", serif;
     }
 
-    /* Portrait stage like the reference */
     .stage{
       position:relative;
       width:min(760px, 100%);
@@ -49,19 +46,18 @@
       background:#120b0c;
     }
 
-    /* IMPORTANT: keep invite.jpg in the repo root (same folder as index.html) */
-    .bg{
+    /* Background image via <img> (more reliable on iOS) */
+    .bgImg{
       position:absolute;
       inset:0;
-      background-image: url("invite.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat:no-repeat;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
       transform: scale(1.01);
       z-index:1;
     }
 
-    /* Super-light vignette (no "mud") */
     .vignette{
       position:absolute;
       inset:0;
@@ -215,14 +211,27 @@
       letter-spacing: .01em;
     }
 
-    /* Particles: visible on phone, NO yellow haze */
     canvas#dust{
       position:absolute;
       inset:0;
       z-index:6;
       pointer-events:none;
-      mix-blend-mode: normal; /* critical: prevents "yellow veil" */
+      mix-blend-mode: normal;
       opacity: 1;
+    }
+
+    .dbg{
+      position:absolute;
+      left:10px;
+      bottom:10px;
+      z-index:10;
+      font: 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: rgba(255,255,255,.75);
+      background: rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.12);
+      padding:8px 10px;
+      border-radius:12px;
+      display:none;
     }
 
     @media (max-width:420px){
@@ -235,7 +244,9 @@
 
 <body>
   <div class="stage">
-    <div class="bg"></div>
+    <!-- ✅ change file name here if yours is invite.png -->
+    <img class="bgImg" id="bgImg" src="invite.jpg" alt="" />
+
     <div class="vignette"></div>
     <div class="frame"></div>
 
@@ -286,18 +297,28 @@
         Остался ещё один
       </div>
     </div>
+
+    <div class="dbg" id="dbg">Фон не найден. Проверь имя файла (invite.jpg / invite.png)</div>
   </div>
 
   <script>
-    // Visible spark-dust (no large bokeh circles = no haze)
+    // Cache-bust the background to avoid iOS/Safari caching weirdness
+    (function(){
+      const img = document.getElementById('bgImg');
+      const base = img.getAttribute('src');
+      img.src = base + '?v=' + Date.now();
+      img.onerror = () => (document.getElementById('dbg').style.display = 'inline-block');
+    })();
+
+    // Visible spark-dust (no large bokeh => no haze)
     const canvas = document.getElementById('dust');
     const ctx = canvas.getContext('2d', { alpha: true });
 
     let w, h, dpr;
     const sparks = [];
 
-    const COUNT = 190;     // density (increase to 230 if you want)
-    const SPEED = 2.6;     // movement speed
+    const COUNT = 190;
+    const SPEED = 2.6;
     const rand = (a,b)=>Math.random()*(b-a)+a;
 
     function resize(){
@@ -312,7 +333,7 @@
     function seed(){
       sparks.length = 0;
       for(let i=0;i<COUNT;i++){
-        const r = rand(1.0, 2.8); // bigger => visible on phone
+        const r = rand(1.0, 2.8);
         sparks.push({
           x: rand(0,w),
           y: rand(0,h),
@@ -342,7 +363,6 @@
         const tw = 0.55 + 0.45*Math.sin(p.ph + t*p.tw);
         const alpha = Math.min(1, p.a * (0.60 + 0.85*tw));
 
-        // small glow (kept small to avoid haze)
         const glowR = p.r * 6.5;
         const g = ctx.createRadialGradient(p.x,p.y,0, p.x,p.y,glowR);
         g.addColorStop(0, `rgba(255, 252, 240, ${alpha*0.55})`);
@@ -352,7 +372,6 @@
         ctx.arc(p.x,p.y,glowR,0,Math.PI*2);
         ctx.fill();
 
-        // crisp core dot
         ctx.fillStyle = `rgba(255, 255, 250, ${Math.min(1, alpha+0.12)})`;
         ctx.beginPath();
         ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
