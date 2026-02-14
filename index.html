@@ -5,10 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Это для тебя</title>
 
+  <!-- Fullscreen when added to Home Screen (iOS) -->
   <meta name="theme-color" content="#050407">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+  <!-- Fonts close to the reference -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -35,6 +37,7 @@
       font-family:"Cormorant Garamond", serif;
     }
 
+    /* Portrait stage like the reference */
     .stage{
       position:relative;
       width:min(760px, 100%);
@@ -46,7 +49,7 @@
       background:#120b0c;
     }
 
-    /* Background image */
+    /* IMPORTANT: keep invite.jpg in the repo root (same folder as index.html) */
     .bg{
       position:absolute;
       inset:0;
@@ -58,7 +61,7 @@
       z-index:1;
     }
 
-    /* MUCH lighter vignette (remove "mud") */
+    /* Super-light vignette (no "mud") */
     .vignette{
       position:absolute;
       inset:0;
@@ -67,8 +70,8 @@
       background:
         radial-gradient(120% 90% at 50% 40%,
           rgba(0,0,0,0.00) 0%,
-          rgba(0,0,0,0.08) 60%,
-          rgba(0,0,0,0.18) 100%);
+          rgba(0,0,0,0.06) 62%,
+          rgba(0,0,0,0.14) 100%);
     }
 
     .frame{
@@ -163,7 +166,7 @@
       background: rgba(25, 16, 17, 0.12);
       backdrop-filter: blur(2px);
       -webkit-backdrop-filter: blur(2px);
-      box-shadow: 0 20px 80px rgba(0,0,0,.20);
+      box-shadow: 0 20px 80px rgba(0,0,0,.18);
     }
     .script{
       font-family: "Great Vibes", cursive;
@@ -212,14 +215,13 @@
       letter-spacing: .01em;
     }
 
-    /* Particles – NO yellow filters, more visible, faster */
+    /* Particles: visible on phone, NO yellow haze */
     canvas#dust{
       position:absolute;
       inset:0;
       z-index:6;
       pointer-events:none;
-      /* additive look without "mud" */
-      mix-blend-mode: lighten;
+      mix-blend-mode: normal; /* critical: prevents "yellow veil" */
       opacity: 1;
     }
 
@@ -287,17 +289,16 @@
   </div>
 
   <script>
+    // Visible spark-dust (no large bokeh circles = no haze)
     const canvas = document.getElementById('dust');
     const ctx = canvas.getContext('2d', { alpha: true });
 
     let w, h, dpr;
-    const particles = [];
+    const sparks = [];
 
-    // Two layers:
-    // 1) sparks: bright tiny points (visible)
-    // 2) bokeh: slow large soft circles (depth)
-    const SPARKS = 140;
-    const BOKEH = 22;
+    const COUNT = 190;     // density (increase to 230 if you want)
+    const SPEED = 2.6;     // movement speed
+    const rand = (a,b)=>Math.random()*(b-a)+a;
 
     function resize(){
       dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
@@ -308,36 +309,19 @@
       ctx.setTransform(dpr,0,0,dpr,0,0);
     }
 
-    const rand = (a,b)=>Math.random()*(b-a)+a;
-
     function seed(){
-      particles.length = 0;
-
-      for(let i=0;i<SPARKS;i++){
-        particles.push({
-          kind: 'spark',
+      sparks.length = 0;
+      for(let i=0;i<COUNT;i++){
+        const r = rand(1.0, 2.8); // bigger => visible on phone
+        sparks.push({
           x: rand(0,w),
           y: rand(0,h),
-          r: rand(0.7, 2.0),
-          a: rand(0.35, 0.90),
-          vx: rand(-0.25, 0.55),   // faster
-          vy: rand(-0.22, 0.22),
-          tw: rand(0.8, 2.2),      // twinkle speed
+          r,
+          a: rand(0.65, 1.00),
+          vx: rand(-0.32, 0.66) * SPEED,
+          vy: rand(-0.22, 0.22) * SPEED,
+          tw: rand(1.6, 4.2),
           ph: rand(0, Math.PI*2)
-        });
-      }
-
-      for(let i=0;i<BOKEH;i++){
-        particles.push({
-          kind: 'bokeh',
-          x: rand(-80,w+80),
-          y: rand(-80,h+80),
-          r: rand(18, 52),
-          a: rand(0.10, 0.22),
-          vx: rand(-0.05, 0.12),
-          vy: rand(-0.05, 0.05),
-          ph: rand(0, Math.PI*2),
-          tw: rand(0.15, 0.45)
         });
       }
     }
@@ -346,58 +330,30 @@
       const t = tms * 0.001;
       ctx.clearRect(0,0,w,h);
 
-      // Bokeh first (back layer)
-      for(const p of particles){
-        if(p.kind !== 'bokeh') continue;
-
-        p.x += p.vx;
-        p.y += p.vy;
-        if(p.x < -120) p.x = w + 120;
-        if(p.x > w + 120) p.x = -120;
-        if(p.y < -120) p.y = h + 120;
-        if(p.y > h + 120) p.y = -120;
-
-        const tw = 0.6 + 0.4*Math.sin(p.ph + t*p.tw);
-        const alpha = p.a * tw;
-
-        const grad = ctx.createRadialGradient(p.x,p.y,0, p.x,p.y,p.r);
-        grad.addColorStop(0, `rgba(255, 234, 190, ${alpha})`);
-        grad.addColorStop(0.55, `rgba(255, 215, 150, ${alpha*0.35})`);
-        grad.addColorStop(1, `rgba(255, 215, 150, 0)`);
-
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fill();
-      }
-
-      // Sparks (front layer) – bright points
-      for(const p of particles){
-        if(p.kind !== 'spark') continue;
-
+      for(const p of sparks){
         p.x += p.vx;
         p.y += p.vy;
 
-        if(p.x < -20) p.x = w + 20;
-        if(p.x > w + 20) p.x = -20;
-        if(p.y < -20) p.y = h + 20;
-        if(p.y > h + 20) p.y = -20;
+        if(p.x < -30) p.x = w + 30;
+        if(p.x > w + 30) p.x = -30;
+        if(p.y < -30) p.y = h + 30;
+        if(p.y > h + 30) p.y = -30;
 
         const tw = 0.55 + 0.45*Math.sin(p.ph + t*p.tw);
-        const alpha = Math.min(1, p.a * (0.65 + 0.75*tw));
+        const alpha = Math.min(1, p.a * (0.60 + 0.85*tw));
 
-        // glow halo
-        const glow = ctx.createRadialGradient(p.x,p.y,0, p.x,p.y,p.r*10);
-        glow.addColorStop(0, `rgba(255, 238, 200, ${alpha})`);
-        glow.addColorStop(1, `rgba(255, 238, 200, 0)`);
-
-        ctx.fillStyle = glow;
+        // small glow (kept small to avoid haze)
+        const glowR = p.r * 6.5;
+        const g = ctx.createRadialGradient(p.x,p.y,0, p.x,p.y,glowR);
+        g.addColorStop(0, `rgba(255, 252, 240, ${alpha*0.55})`);
+        g.addColorStop(1, `rgba(255, 252, 240, 0)`);
+        ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r*10,0,Math.PI*2);
+        ctx.arc(p.x,p.y,glowR,0,Math.PI*2);
         ctx.fill();
 
-        // core dot
-        ctx.fillStyle = `rgba(255, 245, 225, ${Math.min(1, alpha+0.10)})`;
+        // crisp core dot
+        ctx.fillStyle = `rgba(255, 255, 250, ${Math.min(1, alpha+0.12)})`;
         ctx.beginPath();
         ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
         ctx.fill();
