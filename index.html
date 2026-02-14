@@ -20,6 +20,426 @@
       --cream2: rgba(244, 232, 205, 0.70);
       --goldline: rgba(222, 188, 120, 0.55);
       --shadow: rgba(0,0,0,0.55);
+      --panel: rgba(25, 16, 17, 0.10);
+      --panelBorder: rgba(235, 214, 168, 0.34);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+
+    body{
+      margin:0;
+      background:var(--bg);
+      display:grid;
+      place-items:center;
+      padding: env(safe-area-inset-top) 10px env(safe-area-inset-bottom);
+      overflow:hidden;
+      font-family:"Cormorant Garamond", serif;
+    }
+
+    .stage{
+      position:relative;
+      width:min(760px, 100%);
+      height:min(100svh, 1100px);
+      aspect-ratio: 3 / 4;
+      border-radius: 18px;
+      overflow:hidden;
+      box-shadow: 0 30px 120px rgba(0,0,0,.7);
+      background:#120b0c;
+    }
+
+    /* Background: prefer root invite.png. If you want the folder one, change to assets/invite.png */
+    .bgImg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
+      transform: scale(1.01);
+      z-index:1;
+    }
+
+    .vignette{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      z-index:2;
+      background:
+        radial-gradient(120% 90% at 50% 40%,
+          rgba(0,0,0,0.00) 0%,
+          rgba(0,0,0,0.06) 62%,
+          rgba(0,0,0,0.14) 100%);
+    }
+
+    .frame{
+      position:absolute;
+      inset:6%;
+      border-radius: 18px;
+      border: 1px solid rgba(235, 214, 168, 0.24);
+      pointer-events:none;
+      z-index:3;
+    }
+
+    .content{
+      position:absolute;
+      inset:6%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      padding: 22px 18px;
+      color: var(--cream);
+      text-shadow: 0 2px 18px var(--shadow);
+      z-index:4;
+    }
+
+    .tinyHeart{
+      font-size: 22px;
+      line-height: 1;
+      opacity: .82;
+      margin-top: 2px;
+      margin-bottom: 10px;
+    }
+
+    h1{
+      margin: 6px 0 10px;
+      font-weight: 500;
+      letter-spacing: .02em;
+      font-size: clamp(26px, 3.6vw, 44px);
+      line-height: 1.12;
+    }
+
+    .sub{
+      margin: 6px 0 14px;
+      font-size: clamp(14px, 2.1vw, 18px);
+      color: var(--cream2);
+      line-height: 1.55;
+      letter-spacing: .01em;
+    }
+
+    .orn{
+      width: 74%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--goldline), transparent);
+      margin: 14px 0 10px;
+      opacity: .95;
+      position:relative;
+    }
+    .orn::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-2px;
+      width:6px;
+      height:6px;
+      transform: translateX(-50%) rotate(45deg);
+      background: rgba(222,188,120,0.55);
+      opacity: .80;
+    }
+
+    .block{
+      font-size: clamp(15px, 2.2vw, 20px);
+      line-height: 1.78;
+      letter-spacing: .01em;
+      color: rgba(244,232,205,0.90);
+      max-width: 620px;
+    }
+    .block .dim{ color: rgba(244,232,205,0.72); }
+
+    .rules{
+      margin-top: 14px;
+      width: min(620px, 96%);
+      border-radius: 20px;
+      border: 1px solid rgba(235, 214, 168, 0.22);
+      background: rgba(0,0,0,0.18);
+      padding: 14px 14px 12px;
+      text-align:left;
+    }
+    .rulesTitle{
+      text-align:center;
+      font-size: clamp(15px, 2.2vw, 20px);
+      color: rgba(244,232,205,0.88);
+      margin-bottom: 10px;
+      letter-spacing: .01em;
+    }
+    .rules ul{
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+    .rules li{
+      display:flex;
+      gap:10px;
+      padding:6px 0;
+      align-items:flex-start;
+      font-size: clamp(14px, 2.1vw, 18px);
+      line-height: 1.55;
+      color: rgba(244,232,205,0.86);
+    }
+    .dash{
+      color: rgba(222,188,120,0.90);
+      font-weight: 700;
+      transform: translateY(1px);
+    }
+
+    .warn{
+      margin-top: 12px;
+      font-size: clamp(13px, 2.0vw, 17px);
+      color: rgba(244,232,205,0.72);
+      line-height: 1.55;
+    }
+
+    .steps{
+      margin-top: 16px;
+      font-size: clamp(15px, 2.2vw, 20px);
+      line-height: 1.78;
+      color: rgba(244,232,205,0.90);
+    }
+    .steps .label{
+      color: rgba(244,232,205,0.78);
+    }
+
+    .titleWrap{
+      margin-top: 14px;
+      width: min(560px, 94%);
+      border-radius: 26px;
+      border: 1px solid var(--panelBorder);
+      padding: 18px 16px 14px;
+      background: var(--panel);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      box-shadow: 0 20px 80px rgba(0,0,0,.18);
+    }
+    .script{
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(28px, 4.0vw, 52px);
+      line-height: 1.0;
+      color: rgba(244,232,205,0.92);
+      margin-bottom: 6px;
+      text-shadow: 0 2px 20px rgba(0,0,0,.35);
+    }
+    .titleMain{
+      font-size: clamp(18px, 2.8vw, 34px);
+      letter-spacing: .02em;
+      line-height: 1.15;
+      color: rgba(244,232,205,0.92);
+      font-weight: 500;
+      margin:0;
+    }
+
+    .final{
+      margin-top: auto;
+      padding-top: 14px;
+      font-size: clamp(14px, 2.1vw, 18px);
+      color: rgba(244,232,205,0.86);
+      line-height: 1.65;
+    }
+
+    canvas#dust{
+      position:absolute;
+      inset:0;
+      z-index:6;
+      pointer-events:none;
+      mix-blend-mode: normal;
+      opacity: 1;
+    }
+
+    .dbg{
+      position:absolute;
+      left:10px;
+      bottom:10px;
+      z-index:10;
+      font: 12px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: rgba(255,255,255,.75);
+      background: rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.12);
+      padding:8px 10px;
+      border-radius:12px;
+      display:none;
+    }
+
+    @media (max-width:420px){
+      .content{ padding: 18px 14px; }
+      .orn{ width: 86%; }
+      .titleWrap{ width: 96%; }
+      .rules{ width: 98%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stage">
+    <!-- Uses root invite.png (next to index.html). If you want the folder one instead: src="assets/invite.png" -->
+    <img class="bgImg" id="bgImg" src="invite.png" alt="" />
+
+    <div class="vignette"></div>
+    <div class="frame"></div>
+
+    <canvas id="dust"></canvas>
+
+    <div class="content">
+      <div class="tinyHeart">♡</div>
+
+      <h1>Это для тебя.<br>И только для тебя.</h1>
+
+      <div class="sub">Если ты это читаешь — значит всё идёт по плану</div>
+
+      <div class="orn"></div>
+
+      <div class="block">
+        Не спрашивай себя, кто отправил цветы<br>
+        <span class="dim">Сейчас это не важно</span><br>
+        Важно только то, что будет дальше
+      </div>
+
+      <div class="orn" style="margin-top:16px;"></div>
+
+      <div class="rules">
+        <div class="rulesTitle">Прежде чем продолжить:</div>
+        <ul>
+          <li><span class="dash">—</span><span>Убедись, что ты одна</span></li>
+          <li><span class="dash">—</span><span>В комнате тихо</span></li>
+          <li><span class="dash">—</span><span>Никто не увидит экран</span></li>
+          <li><span class="dash">—</span><span>Ты готова уделить этому несколько минут</span></li>
+        </ul>
+      </div>
+
+      <div class="warn">
+        Если хотя бы один пункт не выполнен — закрой страницу<br>
+        Она подождёт
+      </div>
+
+      <div class="orn" style="margin-top:16px;"></div>
+
+      <div class="steps">
+        <div class="label">Когда будешь готова:</div>
+        Включи телевизор<br>
+        Открой приложение VK<br>
+        <span class="label">В поиске введи название:</span>
+      </div>
+
+      <div class="titleWrap">
+        <div class="script">“Даже если”</div>
+        <p class="titleMain">закончатся слова</p>
+      </div>
+
+      <div class="final">
+        Не запускай сразу, сядь удобно<br>
+        Приятного просмотра
+      </div>
+    </div>
+
+    <div class="dbg" id="dbg">Фон не найден. Проверь invite.png (в корне) или поменяй на assets/invite.png</div>
+  </div>
+
+  <script>
+    // Cache-bust background to avoid iOS caching issues
+    (function(){
+      const img = document.getElementById('bgImg');
+      const base = img.getAttribute('src');
+      img.src = base + '?v=' + Date.now();
+      img.onerror = () => (document.getElementById('dbg').style.display = 'inline-block');
+    })();
+
+    // Visible spark-dust (no haze)
+    const canvas = document.getElementById('dust');
+    const ctx = canvas.getContext('2d', { alpha: true });
+
+    let w, h, dpr;
+    const sparks = [];
+
+    const COUNT = 190;
+    const SPEED = 2.6;
+    const rand = (a,b)=>Math.random()*(b-a)+a;
+
+    function resize(){
+      dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      w = canvas.clientWidth = canvas.parentElement.clientWidth;
+      h = canvas.clientHeight = canvas.parentElement.clientHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+
+    function seed(){
+      sparks.length = 0;
+      for(let i=0;i<COUNT;i++){
+        const r = rand(1.0, 2.8);
+        sparks.push({
+          x: rand(0,w),
+          y: rand(0,h),
+          r,
+          a: rand(0.65, 1.00),
+          vx: rand(-0.32, 0.66) * SPEED,
+          vy: rand(-0.22, 0.22) * SPEED,
+          tw: rand(1.6, 4.2),
+          ph: rand(0, Math.PI*2)
+        });
+      }
+    }
+
+    function draw(tms){
+      const t = tms * 0.001;
+      ctx.clearRect(0,0,w,h);
+
+      for(const p of sparks){
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if(p.x < -30) p.x = w + 30;
+        if(p.x > w + 30) p.x = -30;
+        if(p.y < -30) p.y = h + 30;
+        if(p.y > h + 30) p.y = -30;
+
+        const tw = 0.55 + 0.45*Math.sin(p.ph + t*p.tw);
+        const alpha = Math.min(1, p.a * (0.60 + 0.85*tw));
+
+        const glowR = p.r * 6.5;
+        const g = ctx.createRadialGradient(p.x,p.y,0, p.x,p.y,glowR);
+        g.addColorStop(0, `rgba(255, 252, 240, ${alpha*0.55})`);
+        g.addColorStop(1, `rgba(255, 252, 240, 0)`);
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,glowR,0,Math.PI*2);
+        ctx.fill();
+
+        ctx.fillStyle = `rgba(255, 255, 250, ${Math.min(1, alpha+0.12)})`;
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', ()=>{ resize(); seed(); });
+    resize(); seed();
+    requestAnimationFrame(draw);
+  </script>
+</body>
+</html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Это для тебя</title>
+
+  <meta name="theme-color" content="#050407">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#050407;
+      --cream: rgba(244, 232, 205, 0.92);
+      --cream2: rgba(244, 232, 205, 0.70);
+      --goldline: rgba(222, 188, 120, 0.55);
+      --shadow: rgba(0,0,0,0.55);
     }
 
     *{box-sizing:border-box}
